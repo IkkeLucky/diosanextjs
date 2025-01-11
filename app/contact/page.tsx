@@ -1,8 +1,8 @@
 import { PageBanner } from '@/components/page-banner'
 import { LocationMap } from '@/components/location-map'
-import { ContactForm } from '@/components/contact-form'
 import { Footer } from '@/components/footer'
 import { Nav } from '@/components/nav'
+import ContactForm from '@/components/contact-form'
 
 export default function ContactPage() {
   return (

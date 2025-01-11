@@ -1,108 +1,120 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState } from 'react'
 import emailjs from '@emailjs/browser'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import { EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID } from '@/app/emailjs-config'
 
-export function ContactForm() {
-  const [status, setStatus] = useState<{
-    success?: boolean;
-    message?: string;
-  }>({})
+const ContactForm = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const form = e.currentTarget
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
 
     try {
-      const result = await emailjs.sendForm(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
-        form,
-        'YOUR_PUBLIC_KEY'
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+        },
+        EMAILJS_PUBLIC_KEY
       )
-
-      if (result.text === 'OK') {
-        setStatus({
-          success: true,
-          message: 'Thank you for your message. We will get back to you soon!'
-        })
-        form.reset()
-      }
+      setSubmitStatus('success')
+      setFormData({ name: '', email: '', message: '' })
     } catch (error) {
-      setStatus({
-        success: false,
-        message: 'There was an error sending your message. Please try again.'
-      })
+      console.error('Error sending email:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto py-16 px-4">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-light mb-2 text-white">LEAVE A MESSAGE</h2>
-        <p className="text-gray-300">We love to hear from you</p>
-      </div>
-      <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg p-8 shadow-xl">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="user_name" className="text-white">Your Name</Label>
-            <Input
-              id="user_name"
-              name="user_name"
-              placeholder="Your Name"
-              required
-              className="placeholder-dark"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="user_email" className="text-white">Your E-mail</Label>
-            <Input
-              id="user_email"
-              name="user_email"
-              type="email"
-              placeholder="Your E-mail"
-              required
-              className="placeholder-dark"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="subject" className="text-white">Subject</Label>
-            <Input
-              id="subject"
-              name="subject"
-              placeholder="Subject"
-              required
-              className="placeholder-dark"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="message" className="text-white">Your Message</Label>
-            <Textarea
-              id="message"
-              name="message"
-              placeholder="Your Message"
-              required
-              rows={6}
-              className="placeholder-dark"
-            />
-          </div>
-          <div className="flex justify-center">
-            <Button type="submit" className="bg-[#c17f82] hover:bg-[#a66d70] text-white">
-              Submit
-            </Button>
-          </div>
-          {status.message && (
-            <p className={`text-center ${status.success ? 'text-green-400' : 'text-red-400'}`}>
-              {status.message}
-            </p>
+    <section id="contact-form" className="py-12 bg-[#382a41]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl font-extrabold text-white mb-8 text-center">Contact Us</h2>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-y-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-white">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-white">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-white">
+                Message
+              </label>
+              <textarea
+                name="message"
+                id="message"
+                rows={4}
+                value={formData.message}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary"
+                required
+              ></textarea>
+            </div>
+            <div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+              >
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+              </button>
+            </div>
+          </form>
+          {submitStatus === 'success' && (
+            <p className="mt-4 text-green-600 text-center">Message sent successfully!</p>
           )}
-        </form>
+          {submitStatus === 'error' && (
+            <p className="mt-4 text-red-600 text-center">Error sending message. Please try again.</p>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
 
+export default ContactForm
