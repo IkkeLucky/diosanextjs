@@ -72,7 +72,7 @@ export default function HomePage() {
       
       {/* Video Section */}
       <section className="max-w-7xl mx-auto px-4 py-16">
-        <VideoPlayer src="/video-placeholder.mp4" />
+        <VideoPlayer src="/images/diosavideo.mp4" />
       </section>
       
       {/* Content Blocks */}
