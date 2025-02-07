@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Instagram, Facebook, Twitter, Youtube, PinIcon as Pinterest } from 'lucide-react'
+import { Instagram, Facebook, Twitter, Youtube,} from 'lucide-react'
 import Image from 'next/image'
 
 export function Footer() {
@@ -58,19 +58,16 @@ export function Footer() {
             <div className="mt-4">
               <p className="mb-2">Follow us</p>
               <div className="flex justify-center md:justify-start space-x-4">
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="https://www.instagram.com/ladiosashop_soytudiosa" className="hover:text-white transition-colors">
                   <Instagram className="h-5 w-5" />
                 </a>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="https://www.facebook.com/LADIOSASHOPSOYTUDIOSA?mibextid=LQQJ4d" className="hover:text-white transition-colors">
                   <Facebook className="h-5 w-5" />
                 </a>
                 <a href="#" className="hover:text-white transition-colors">
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a href="#" className="hover:text-white transition-colors">
-                  <Pinterest className="h-5 w-5" />
-                </a>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="https://www.youtube.com/@diosasallimitepodcast" className="hover:text-white transition-colors">
                   <Youtube className="h-5 w-5" />
                 </a>
               </div>
