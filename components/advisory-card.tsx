@@ -28,6 +28,7 @@ export function AdvisoryCard({ service }: AdvisoryCardProps) {
             <span className="text-gray-900">{service.price.toFixed(2)}EUR</span>
             <a
               href={service.buyLink}
+              target="_blank"
               className="px-6 py-2 bg-[#c17f82] text-white rounded hover:bg-[#a66d70] transition-colors"
             >
               Buy now!

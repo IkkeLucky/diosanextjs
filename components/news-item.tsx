@@ -35,6 +35,7 @@ export function NewsItemCard({ item }: NewsItemProps) {
         </p>
         <Link 
           href={item.link}
+          target="_blank"
           className="inline-flex items-center text-white hover:text-gray-300 transition-colors group w-fit"
         >
           <span className="border-b border-current">CONTINUE READING</span>
